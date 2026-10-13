@@ -1,9 +1,14 @@
 <script setup>
-import { ref } from 'vue'
+import { computed } from 'vue'
+
 const props = defineProps({
     film: { type: Object, required: true },
     info: { type: Object, required: false }
 })
+
+const emit = defineEmits(['request-info'])
+
+const plot = computed(() => props.info?.Plot || 'No hi ha descripció disponible.')
 </script>
 
 <template>
@@ -13,14 +18,14 @@ const props = defineProps({
         <p>{{ film.Year }}</p>
         <v-dialog max-width="500">
             <template v-slot:activator="{ props: activatorProps }">
-                <v-btn @click="Info(film.imdbID)" v-bind="activatorProps" color="surface-variant" text="Més informació"
-                    variant="flat"></v-btn>
+                <v-btn @click="emit('request-info', film.imdbID)" v-bind="activatorProps" color="surface-variant"
+                    text="Més informació" variant="flat"></v-btn>
             </template>
 
             <template v-slot:default="{ isActive }">
                 <v-card :title="film.Title">
                     <v-card-text>
-                        {{ info.Plot }}
+                        {{ plot }}
                     </v-card-text>
 
                     <v-card-actions>
